@@ -427,6 +427,9 @@ CV_EXPORTS_W Ptr<linemod::Detector> getDefaultLINE();
  */
 CV_EXPORTS_W Ptr<linemod::Detector> getDefaultLINEMOD();
 
+CV_EXPORTS_W CV_EXPORTS void writeLinemod(const Ptr<Detector>& detector, const char* filename);
+
+CV_EXPORTS_W CV_EXPORTS cv::Ptr<Detector> readLinemod(const char* filename);
 //! @}
 
 } // namespace linemod

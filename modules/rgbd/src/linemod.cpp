@@ -1836,5 +1836,34 @@ Ptr<Detector> getDefaultLINEMOD()
   return makePtr<Detector>(modalities, std::vector<int>(T_DEFAULTS, T_DEFAULTS + 2));
 }
 
+void writeLinemod(const Ptr<Detector>& detector, const char* filename)
+{
+//  std::string filename("test.yaml");
+  FileStorage fs(filename, FileStorage::WRITE);
+  detector->write(fs);
+
+  std::vector<String> ids = detector->classIds();
+  fs << "classes" << "[";
+  for (int i = 0; i < (int)ids.size(); ++i)
+  {
+    fs << "{";
+    detector->writeClass(ids[i], fs);
+    fs << "}"; // current class
+  }
+  fs << "]"; // classes
+}
+
+cv::Ptr<Detector> readLinemod(const char* filename)
+{
+  Ptr<Detector> detector = makePtr<Detector>();
+  FileStorage fs(filename, FileStorage::READ);
+  detector->read(fs.root());
+
+  cv::FileNode fn = fs["classes"];
+  for (cv::FileNodeIterator i = fn.begin(), iend = fn.end(); i != iend; ++i)
+    detector->readClass(*i);
+
+  return detector;
+}
 } // namespace linemod
 } // namespace cv
